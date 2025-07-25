@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+<!-- Breadcrumb centralizado fora do cartão -->
+<div class="empresa__breadcrumb-box">
+  <div class="s-produto__breadcrumbs">
+    <strong>Você está em:</strong> <span><a href="{% url 'homepage' %}">Home</a></span>
+    <span><p>Quem Somos</p></span>
+  </div>
+</div>
+
+<!-- Container com fundo cinza -->
+<div class="empresa__container">
+  <div class="empresa__conteudo">
+    <h1>A Empresa</h1>
+    <p>
+      A <strong>Tudo Mix</strong> é uma empresa que atua no mercado desde junho de 2025, oferecendo uma grande variedade de produtos como eletrônicos, carregadores, brinquedos, garrafas de água e muito mais.
+    </p>
+    <p>
+      Nosso foco é entregar <strong>qualidade extrema</strong> em cada item, sempre com responsabilidade, agilidade e respeito aos nossos clientes. Estamos comprometidos em oferecer produtos confiáveis que facilitam o seu dia a dia, com um atendimento transparente e humanizado.
+    </p>
+    <p>
+      Conte com a Tudo Mix para encontrar o que você precisa com <strong>qualidade e confiança</strong>!
+    </p>
+  </div>
+</div>
+
+{% endblock %}

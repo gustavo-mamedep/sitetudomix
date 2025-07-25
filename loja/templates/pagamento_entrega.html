@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+<main class="principal">
+  <section class="carrinho">
+    <div class="sacola">
+      <div class="sacola__titulos">
+        <h1 class="sacola__titulo">Pagamento na Entrega / Retirada</h1>
+        <p>Pedido nº {{ pedido.id }} — Total: R$ {{ pedido.preco_total }}</p>
+      </div>
+
+      <div class="entrega__mensagem">
+        <h3 class="entrega__texto">
+          Obrigado! Entraremos em contato por telefone/e‑mail para combinar a entrega e recebimento.
+        </h3>
+
+        <p>Caso queira falar com a gente:</p>
+
+        <a
+          class="rodape__ancora-icone"
+          href="https://wa.me/5534998774990?text=Ol%C3%A1%2C%20gostaria%20de%20atendimento!"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            loading="lazy"
+            crossorigin="anonymous"
+            class="rodape__icone"
+            src="https://lojausereserva.vtexassets.com/assets/vtex.file-manager-graphql/images/d20346db-d162-4873-8518-b8548620acf6___07a0cb802e61ce015e6477828969ca35.svg"
+            alt="WhatsApp Tudo Mix"
+          />
+          WhatsApp Tudo Mix
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<style>
+  /* Centraliza só o bloco de mensagem */
+  .entrega__mensagem {
+    text-align: center;
+    margin-top: 4rem;
+  }
+  .entrega__texto {
+    max-width: 400px;
+    margin: 0 auto 1.5rem;
+    line-height: 1.5;
+  }
+
+  /* Botão WhatsApp: alinhamento e estilo padrão */
+  .rodape__ancora-icone {
+    margin-top: 4rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;       /* garante que o ícone e texto fiquem centrados */
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;        /* tamanho padrão para desktop */
+    background-color: #ffe500;
+    color: #000000;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  .rodape__icone {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  /* Somente na tela normal (desktop) encolhe um pouco o botão */
+  @media (min-width: 481px) {
+    .rodape__ancora-icone {
+      padding: 0.5rem 1rem;         /* reduz o botão */
+    }
+    .rodape__icone {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+  }
+
+  /* Nas telas pequenas, mantém o que já estava funcionando */
+  @media (max-width: 480px) {
+    .entrega__texto {
+      font-size: 0.9rem;
+      padding: 0 1rem;
+    }
+    .rodape__ancora-icone {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+    }
+    .rodape__icone {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+  }
+</style>
+
+{% endblock %}

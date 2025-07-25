@@ -1,0 +1,131 @@
+{% load static %}
+
+<header class="cabecalho">
+      <div class="cabecalho__menu">
+        <img
+          class="cabecalho__menu-icone"
+          src="{% static 'images/menu.svg' %}"
+          alt="Ícone Menu"
+        />
+        <p class="cabecalho__menu-x">X</p>
+      </div>
+
+      <div class="cabecalho__container">
+        <a href="{% url 'homepage' %}">
+          <img
+            src="https://res.cloudinary.com/dimjivzgn/image/upload/v1753409843/logo_tudomix_ufqoso.png"
+            alt="Logo Tudo Mix"
+            class="cabecalho__logo"
+          />
+        </a>
+
+        <nav class="cabecalho__navegacao">
+        <ul class="cabecalho__lista">
+          {% for categoria in categorias_navegacao %}
+          <li class="cabecalho__item-lista">
+            <a
+              class="cabecalho__link"
+              href="{% url 'loja' categoria.slug %}"
+            >
+              {{ categoria.nome }}
+            </a>
+
+            <div class="cabecalho__expansao-tipos">
+              <!-- imagem fixa ou remova este link se não quiser a imagem -->
+
+              <ul class="cabecalho__lista cabecalho__lista--subcategoria">
+                <!-- “Ver todos” sempre no topo da lista de subcategorias -->
+                <li>
+                  <a
+                    class="cabecalho__link cabecalho__link--subcategoria"
+                    href="{% url 'loja' categoria.slug %}"
+                  >
+                    Ver todos
+                  </a>
+                </li>
+
+                {% for sub in categoria.subcategorias.all %}
+                <li>
+                  <a
+                    class="cabecalho__link cabecalho__link--subcategoria"
+                    href="{% url 'loja_subcategoria' categoria.slug sub.slug %}"
+                  >
+                    {{ sub.nome }}
+                  </a>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+
+
+        </nav>
+      </div>
+
+      <div class="cabecalho__icones">
+        <div class="cabecalho__icone-login">
+            <!-- Para trocar o ícone basta adicionar a classe 'cabecalho__link-icone--logado' na âncora abaixo -->
+            {% if request.user.is_authenticated %}
+            <a class="cabecalho__link-icone cabecalho__link-icone--logado" href="javascript: void(0)">
+            {% else %}
+            <a class="cabecalho__link-icone" href="{% url 'fazer_login' %}">
+            {% endif %}
+
+            <svg class="cabecalho__icone" xmlns="http://www.w3.org/2000/svg">
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M8 1.333a3.332 3.332 0 100 6.662 3.332 3.332 0 100-6.662zM3.334 4.664A4.665 4.665 0 018 0a4.665 4.665 0 110 9.328 4.665 4.665 0 01-4.666-4.664zm2 8.662A3.333 3.333 0 002 16.657v1.996h12v-1.996a3.333 3.333 0 00-3.333-3.333H5.334zM.667 16.657a4.666 4.666 0 014.667-4.666h5.333a4.666 4.666 0 014.667 4.666v3.33H.667v-3.33z"
+                fill="inherit"
+              />
+            </svg>
+            <svg
+              class="cabecalho__icone cabecalho__icone--logado"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.8496 15.3103C15.526 13.6954 12.9549 12.5999 9.99992 12.5999C7.04496 12.5999 4.47379 13.6954 3.15028 15.3103M16.8496 15.3103C17.9885 13.8434 18.6666 12.0009 18.6666 9.99992C18.6666 5.21345 14.7864 1.33325 9.99992 1.33325C5.21345 1.33325 1.33325 5.21345 1.33325 9.99992C1.33325 12.0009 2.01135 13.8434 3.15028 15.3103M16.8496 15.3103C15.264 17.3525 12.7854 18.6666 9.99992 18.6666C7.21439 18.6666 4.7358 17.3525 3.15028 15.3103M13.4666 7.39992C13.4666 9.31451 11.9145 10.8666 9.99992 10.8666C8.08533 10.8666 6.53325 9.31451 6.53325 7.39992C6.53325 5.48533 8.08533 3.93325 9.99992 3.93325C11.9145 3.93325 13.4666 5.48533 13.4666 7.39992Z"
+                stroke="inherit"
+              />
+            </svg>
+          </a>
+
+          <!-- Para exibir o menu do perfil, basta adicionar a classe 'cabecalho__informacoes-perfil--aberto' na div abaixo -->
+          <div class="cabecalho__informacoes-perfil">
+            <p class="cabecalho__texto">Olá, <span>{{ request.user.cliente.nome }}</span>!</p>
+            <a
+              class="cabecalho__link cabecalho__link--perfil"
+              href="{% url 'minha_conta' %}"
+              >Minha Conta</a
+            >
+            <a
+              class="cabecalho__link cabecalho__link--perfil"
+              href="{% url 'meus_pedidos' %}"
+              >Meus Pedidos</a
+            >
+            {% if equipe %}
+            <a
+              class="cabecalho__link cabecalho__link--perfil"
+              href="{% url 'gerenciar_loja' %}"
+              >Gerenciar Loja</a
+            >
+            {% endif %}
+
+            <hr />
+            <a class="cabecalho__link cabecalho__link--perfil" href="{% url 'fazer_logout' %}">Sair</a>
+          </div>
+        </div>
+
+        <div class="cabecalho__icone-carrinho">
+          <a class="cabecalho__link-icone" href="{% url 'carrinho' %}">
+            <!-- ícone de carrinho do Bootstrap Icons -->
+            <i class="bi bi-cart-plus-fill cabecalho__icone cabecalho__icone--menor"></i>
+          </a>
+          <div class="cabecalho__itens cabecalho__itens--visivel">
+            {{ quantidade_produtos_carrinho }}
+          </div>
+        </div>
+      </div>
+</header>

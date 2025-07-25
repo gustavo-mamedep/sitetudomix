@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+
+
+
+<main class="principal">
+      <section class="conta">
+
+        <div class="conta__container">
+          <div class="checkout__titulos">
+            <p class="checkout__titulo">Dados pessoais</p>
+          </div>
+
+        {% if alterado %}
+            <p>Alterações salvas com sucesso!</p>
+        {% endif %}
+
+        {% if erro == "formulario_invalido"%}
+            <p>Formulário Inválido, tente novamente</p>
+        {% endif %}
+
+        {% if erro == "email_existente"%}
+            <p>E-mail digitado já usado para outra conta</p>
+        {% endif %}
+
+          <form
+            class="conta__form"
+            action="{% url 'minha_conta' %}"
+            method="post"
+          >
+          {% csrf_token %}
+            <div class="conta__item conta__item--email">
+              <label for="nome">Nome</label>
+              <input name="nome" type="text" placeholder="Digite o nome completo" 
+                {% if request.user.cliente.nome %}
+                    value="{{ request.user.cliente.nome }}"
+                {% endif %} />
+            </div>
+
+            <div class="conta__item conta__item--email">
+              <label for="email">E-mail</label>
+              <input name="email" type="email" placeholder="Digite seu e-mail" value="{{ request.user.email }}" />
+            </div>
+            
+            <div class="conta__item">
+              <label for="telefone">CPF</label>
+              <input name="cpf" type="text" placeholder="Digite o seu cpf" 
+              {% if request.user.cliente.nome %}
+                    value="{{ request.user.cliente.cpf }}"
+                {% endif %}/>
+            </div>
+
+            <div class="conta__item">
+              <label for="telefone">Telefone</label>
+              <input name="telefone" type="number" placeholder="Digite o seu telefone" value="{{ request.user.cliente.telefone }}" />
+            </div>
+
+            <button class="subtotal__botao" type="submit">
+              Salvar alterações
+            </button>
+          </form>
+        </div>
+
+        <div class="conta__container">
+          <div class="checkout__titulos">
+            <p class="checkout__titulo">Alterar a senha</p>
+          </div>
+        
+        {% if alterado %}
+            <p>Alterações salvas com sucesso!</p>
+        {% endif %}
+    
+        {% if erro == "senha_incorreta"%}
+            <p>Sua senha atual está incorreta, tente novamente</p>
+        {% endif %}
+
+        {% if erro == "senhas_diferentes"%}
+            <p>Senhas digitadas não estão iguais, tente novamente</p>
+        {% endif %}
+
+          <form
+            class="conta__form"
+            action="{% url 'minha_conta' %}"
+            method="post"
+          >
+          {% csrf_token %}
+            <div class="conta__item">
+              <label for="senha_atual">Senha Atual</label>
+              <input name="senha_atual" type="password" placeholder="Digite a senha atual" />
+            </div>
+
+            <div class="conta__item">
+              <label for="nova_senha">Nova Senha</label>
+              <input name="nova_senha" type="password" placeholder="Digite a nova senha" />
+            </div>
+
+            <div class="conta__item">
+              <label for="nova_senha_confirmacao">Confirme a nova senha</label>
+              <input name="nova_senha_confirmacao" type="password" placeholder="Confirme a nova senha" />
+            </div>
+
+            <button class="subtotal__botao" type="submit">
+              Gravar a nova senha
+            </button>
+          </form>
+        </div>
+      </section>
+</main>
+
+
+
+{% endblock %}

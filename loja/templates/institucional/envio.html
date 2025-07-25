@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+<!-- Breadcrumb centralizado fora do cartão -->
+<div class="empresa__breadcrumb-box">
+  <div class="s-produto__breadcrumbs">
+    <strong>Você está em:</strong>
+    <span><a href="{% url 'homepage' %}">Home</a></span>
+    <span><p>Envio</p></span>
+  </div>
+</div>
+
+<!-- Container com fundo cinza -->
+<div class="empresa__container">
+  <div class="empresa__conteudo">
+
+    <p><h2>Enviamos para todo o Brasil.</h2></p>
+    <p>As entregas serão efetuadas através dos Correios (PAC e SEDEX). Caso o endereço de entrega seja na cidade de <strong>Uberlândia-MG</strong> poderemos usar outros meios de entregas parceiras.</p>
+
+    <h2>Prazo de entrega</h2>
+    <p>A contagem do prazo é feita em dias úteis.</p>
+
+    <h2>Prazo para postagem</h2>
+    <p>Será considerado o horário da aprovação do pagamento e não o momento da sua compra.</p>
+    <p>O serviço de entrega é realizado por meio dos Correios e o prazo pode variar de acordo com o local e a modalidade escolhida: PAC ou SEDEX.</p>
+    <p>Não nos responsabilizamos por atraso, uma vez que este serviço é realizado via Correio.</p>
+
+    <h2>Reenvio do Pedido</h2>
+    <p>
+      Nos casos de endereço incorreto, inexistente, destinatário ausente ou qualquer outro que impossibilite a entrega,
+      o entregador devolverá o pedido à TUDO MIX, que entrará em contato com o cliente para programar o reenvio.
+      Nestes casos, o valor do serviço de reenvio será cobrado do cliente.
+    </p>
+
+    <h2>Dúvidas</h2>
+    <p>
+      Qualquer dúvida quanto a esta política ou procedimentos a adotar entre em contato conosco através do WhatsApp
+      <strong>(34) 99877‑4990</strong>, no horário de segunda a sábado, das 9h às 19h, ou pelo e‑mail
+      <a href="mailto:tudomixudi@gmail.com">tudomixudi@gmail.com</a>.
+    </p>
+  </div>
+</div>
+
+{% endblock %}

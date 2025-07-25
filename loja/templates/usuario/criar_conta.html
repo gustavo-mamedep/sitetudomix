@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+
+<main class="principal">
+      <section class="conta">
+
+        <div class="conta__container">
+          <div class="checkout__titulos">
+            <p class="checkout__titulo">Crie sua conta</p>
+          </div>
+
+        {% if erro == "preenchimento" %}
+            <p>Preencha todas as informações corretamente</p>
+        {% endif %}
+
+        {% if erro == "email_invalido" %}
+            <p>Digite um E-mail válido</p>
+        {% endif %}
+
+        {% if erro == "usuario_existente" %}
+            <p>Já existe uma conta criada para este E-mail</p>
+        {% endif %}
+
+        {% if erro == "senhas_diferentes" %}
+            <p>As senhas não são as mesmas, tente novamente</p>
+        {% endif %}
+
+          <form
+            class="conta__form"
+            action="{% url 'criar_conta' %}"
+            method="post"
+          >
+          {% csrf_token %}
+
+            <div class="conta__item conta__item--email">
+              <label for="email">E-mail</label>
+              <input name="email" type="email" placeholder="Digite seu E-mail" />
+            </div>
+
+            <div class="conta__item">
+              <label for="senha">Senha</label>
+              <input name="senha" type="password" placeholder="Digite sua Senha" />
+            </div>
+
+            <div class="conta__item">
+              <label for="confirmacao_senha">Senha</label>
+              <input name="confirmacao_senha" type="password" placeholder="Confirme sua Senha" />
+            </div>
+
+            <button class="subtotal__botao" type="submit">
+              Criar minha conta 
+            </button>
+          </form>
+            <a href="{% url 'fazer_login' %}">Já tem uma conta? Fazer Login</a>
+        </div>
+
+      </section>
+</main>
+
+
+{% endblock %}

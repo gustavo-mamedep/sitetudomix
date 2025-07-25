@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+<!-- Breadcrumb centralizado fora do cartão -->
+<div class="empresa__breadcrumb-box">
+  <div class="s-produto__breadcrumbs">
+    <strong>Você está em:</strong>
+    <span><a href="{% url 'homepage' %}">Home</a></span>
+    <span><p>Trocas e Devoluções</p></span>
+  </div>
+</div>
+
+<!-- Container com fundo cinza -->
+<div class="empresa__container">
+  <div class="empresa__conteudo">
+
+    <p><h1>Trocas e Devoluções</h1></p>
+    <p>O consumidor deverá entrar em contato com nosso atendimento via e-mail <a href="mailto:tudomixudi@gmail.com">tudomixudi@gmail.com</a> para solicitar a troca, devolução ou cancelamento.</p>
+
+    <p>Consumidor tem o prazo para entrar em contato como nosso atendimento em até 07 dias conforme artigo 49 do Código de Defesa do Consumidor CDC – Lei 8.078 de 11/11/1990.</p>
+
+    <p>Para troca ou devolução o produto deverá retornar nas mesmas condições do envio, embalagem original preservada e em perfeitas condições, com todas as etiquetas afixadas, forma de uso invioladas, sem odores ou qualquer outra forma que caracterize o uso do mesmo.</p>
+    
+    <p>Produtos de promoção, a despesa de envio e reenvio no caso de troca e devolução é por conta do comprador.</p>
+
+    <p>Produtos que apresentam defeito de fabricação após 07 dias é necessário que o cliente verifique garantia autorizada do fabricante, onde, a hipótese de troca ou concerto serão feitos diretamente com o fabricante ou assistência técnica indicada por ele. O fabricante pede um prazo de 30 dias para o concerto e mais o prazo do envio para considerar.</p>
+    
+    <strong>Importante: Ao receber o produto, verificar se o mesmo não está com a embalagem violada. Caso isso ocorra, não receba a mercadoria e entre em contato conosco imediatamente.</strong>
+
+  </div>
+</div>
+
+{% endblock %}

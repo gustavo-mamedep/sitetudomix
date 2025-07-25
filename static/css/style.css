@@ -1,0 +1,78 @@
+
+
+/*# sourceMappingURL=style.css.map */
+
+.empresa__breadcrumb-box {
+  display: flex;
+  padding-top: 6rem;
+  background-color: #f9f9f9;
+}
+
+
+.empresa__breadcrumb-box .s-produto__breadcrumbs {
+  max-width: 800px;
+  width: 100%;
+  justify-content: center;
+  gap: 0.8rem;
+  font-size: 1.4rem;
+  display: flex;
+  padding: 0;
+}
+
+.empresa__breadcrumb-box .s-produto__breadcrumbs span {
+  color: #777;
+}
+
+.empresa__breadcrumb-box .s-produto__breadcrumbs a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.empresa__breadcrumb-box .s-produto__breadcrumbs a:hover {
+  text-decoration: underline;
+}
+
+/* Seção institucional */
+.empresa__container {
+  width: 100%;
+  min-height: calc(100vh - 160px);
+  background-color: #f9f9f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+}
+
+.empresa__conteudo {
+  max-width: 800px;
+  width: 100%;
+  text-align: justify;
+  background-color: rgb(255, 255, 255);
+  padding: 3rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  font-size: 1.8rem;
+  line-height: 1.8;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.empresa__conteudo h1 {
+  text-align: center;
+  margin-bottom: 3rem;
+  font-size: 2.6rem;
+  font-weight: bold;
+}
+
+.empresa__conteudo p {
+  margin-bottom: 2rem;
+}
+
+.rodape__informacoes {
+  justify-content: flex-start !important;
+  gap: 4rem !important;
+}
+
+
+.rodape__secao-empresa {
+  margin-top: 4rem; /* ajuste conforme desejar */}
+

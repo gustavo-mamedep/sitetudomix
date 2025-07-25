@@ -1,0 +1,87 @@
+<footer class="rodape">
+  <section class="rodape__secao-formulario">
+    <div class="rodape__app-newsletter">
+      <!-- newsletter ou vazio -->
+    </div>
+  </section>
+
+  <section class="rodape__secao-informacoes">
+    <div class="rodape__container">
+      <!-- Coluna: Institucional + Minha Conta -->
+      <div class="rodape__informacoes">
+        <div class="rodape__informacao">
+          <p class="rodape__titulo">Institucional</p>
+          <ul class="rodape__links">
+            <li><a href="{% url 'empresa' %}">Quem Somos</a></li>
+            <li><a href="{% url 'seguranca' %}">Segurança</a></li>
+            <li><a href="{% url 'envio' %}">Envio</a></li>
+            <li><a href="{% url 'troca' %}">Trocas e Devoluções</a></li>
+            <li><a href="{% url 'politica_privacidade' %}">Política de Privacidade</a></li>
+          </ul>
+        </div>
+        <div class="rodape__informacao">
+          <p class="rodape__titulo">Minha Conta</p>
+          <ul class="rodape__links">
+            <li><a href="{% url 'criar_conta' %}">Criar uma conta</a></li>
+            <li><a href="{% url 'fazer_login' %}">Fazer Login</a></li>
+            <li><a href="{% url 'meus_pedidos' %}">Meus Pedidos</a></li>
+            <li><a href="{% url 'minha_conta' %}">Alterar dados</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Coluna: Atendimento + Redes Sociais -->
+      <div class="rodape__atendimento">
+        <p class="rodape__titulo">Atendimento</p>
+        <div class="rodape__ancoras">
+          <a class="rodape__ancora-icone" 
+                  href="https://wa.me/5534998774990?text=Ol%C3%A1%2C%20gostaria%20de%20atendimento!"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >     
+            <img
+              loading="lazy"
+              crossorigin="anonymous"
+              class="rodape__icone"
+              src="https://lojausereserva.vtexassets.com/assets/vtex.file-manager-graphql/images/d20346db-d162-4873-8518-b8548620acf6___07a0cb802e61ce015e6477828969ca35.svg"
+              alt="WhatsApp Reserva"
+            />
+            WhatsApp Tudo Mix
+          </a>
+        </div>
+        <div class="rodape__redes">
+          <a href="https://www.instagram.com/tudomix_udi/" target="_blank" rel="noopener noreferrer" class="rodape__rede">
+            <img
+              src="https://lojausereserva.vtexassets.com/arquivos/insx1.png"
+              alt="Logo Instagram"
+            />
+          </a>
+          <a href="https://www.facebook.com/tudomixudi" target="_blank" rel="noopener noreferrer" class="rodape__rede">
+            <img
+              src="https://lojausereserva.vtexassets.com/arquivos/fbx1.png"
+              alt="Logo Facebook"
+            />
+          </a>
+          <a href="#" class="rodape__rede">
+            <img
+              src="https://lojausereserva.vtexassets.com/arquivos/ytx1.png"
+              alt="Logo YouTube"
+            />
+          </a>
+          <a href="#" class="rodape__rede">
+            <img
+              src="https://lojausereserva.vtexassets.com/arquivos/twx1.png"
+              alt="Logo Twitter"
+            />
+          </a>
+        </div>
+      </div>
+    </div>
+
+  <section class="rodape__secao-empresa mt-5">
+    <p>
+      TUDO MIX STORE | CNPJ: 60.621.203/0001-27 | AV JOSE FONSECA E SILVA, 622
+      - LUIZOTE DE FREITAS - UBERLÂNDIA-MG | CEP: 38414‑348
+    </p>
+  </section>
+</footer>

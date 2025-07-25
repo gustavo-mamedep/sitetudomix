@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+<main class="principal">
+  <section class="carrinho">
+    <div class="sacola">
+
+      <div class="sacola__titulos">
+        <h1 class="sacola__titulo">Pagamento via PIX</h1>
+        <p>Pedido nº {{ pedido.id }} — Total: R$ {{ pedido.preco_total }}</p>
+      </div>
+
+      <div class="pix">
+
+        <!-- Chave PIX centralizada -->
+        <p class="pix__chave">
+          Chave PIX: <strong>{{ chave_pix }}</strong>
+        </p>
+
+        <!-- QR Code centralizado -->
+        <div class="pix__qr">
+          <img
+            src="{{ qr_code }}"
+            alt="QR Code PIX"
+          />
+        </div>
+
+        <!-- Código PIX logo abaixo, alinhado à esquerda -->
+        <div class="pix__copy">
+          <label for="pixPayload">Código PIX:</label>
+          <pre
+            id="pixPayload"
+            class="pix__codigo"
+          >{{ pix_payload }}</pre>
+          <button id="copyBtn" type="button" class="subtotal__botao">
+            Copiar código
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<style>
+  /* centraliza chave e QR */
+  .pix__chave {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  .pix__qr {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  .pix__qr img {
+    display: inline-block;
+    width: 150px;
+    height: 150px;
+  }
+
+  /* espaço antes do código */
+  .pix__copy {
+    margin-top: 1.5rem;
+  }
+
+  /* mantém formatação do código, mas permite wrap e scroll em mobile */
+  .pix__codigo {
+    padding: .5em;
+    background: #f5f5f5;
+    white-space: pre-wrap;
+    word-break: break-all;
+    overflow-x: auto;
+  }
+
+  /* botão de feedback */
+  .subtotal__botao.copied {
+    background-color: #000;
+    color: #fff;
+  }
+
+  /* ajustes responsivos para dispositivos pequenos */
+  @media (max-width: 480px) {
+    .pix__qr img {
+      width: 100px;
+      height: 100px;
+    }
+    .pix__chave {
+      font-size: 0.9rem;
+      padding: 0 1rem;
+    }
+    .pix__copy {
+      margin-top: 1rem;
+      padding: 0 1rem;
+    }
+    .pix__codigo {
+      font-size: 0.75rem;
+    }
+    .subtotal__botao {
+      width: 100%;
+      font-size: 0.85rem;
+      padding: 0.5rem;
+    }
+  }
+</style>
+
+<script>
+  const copyBtn = document.getElementById('copyBtn');
+  const pixPayload = document.getElementById('pixPayload');
+
+  copyBtn.addEventListener('click', () => {
+    const texto = pixPayload.innerText.trim();
+    navigator.clipboard.writeText(texto)
+      .then(() => {
+        copyBtn.innerText = 'Código copiado!';
+        copyBtn.classList.add('copied');
+        setTimeout(() => {
+          copyBtn.innerText = 'Copiar código';
+          copyBtn.classList.remove('copied');
+        }, 3000);
+      })
+      .catch(() => {
+        copyBtn.innerText = 'Erro ao copiar';
+        setTimeout(() => {
+          copyBtn.innerText = 'Copiar código';
+        }, 3000);
+      });
+  });
+</script>
+
+{% endblock %}
