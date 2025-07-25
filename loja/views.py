@@ -14,6 +14,18 @@ from .api_mercadopago import criar_pagamento
 
 
 
+from django.contrib.auth import get_user_model
+from django.http import HttpResponse
+
+def criar_superuser_temporario(request):
+    User = get_user_model()
+    if not User.objects.filter(username='admin').exists():
+        User.objects.create_superuser('admin', 'admin@admin.com', 'admin123')
+        return HttpResponse('Superusuário criado com sucesso.')
+    return HttpResponse('Já existe um superusuário.')
+
+
+    
 
 
 # Create your views here.

@@ -18,8 +18,10 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
+from loja.views import criar_superuser_temporario
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('loja.urls')),
+    path('criaradmin/', criar_superuser_temporario),
 ]
