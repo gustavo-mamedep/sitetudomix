@@ -12,33 +12,6 @@ from django.core.mail import send_mail
 from datetime import datetime
 from .api_mercadopago import criar_pagamento
 
-from django.http import HttpResponse
-from django.core.management import call_command
-from django.contrib.auth import get_user_model
-
-
-
-
-def setup_site(request):
-    # ⚠️ Segurança: só deixe acessível enquanto estiver configurando
-    if request.GET.get('token') != 'secreto123':
-        return HttpResponse("Acesso negado.", status=403)
-
-    # 1. Migrar o banco
-    call_command('migrate')
-
-    # 2. Criar superusuário padrão se não existir
-    User = get_user_model()
-    if not User.objects.filter(username='admin').exists():
-        User.objects.create_superuser('admin', 'gustavo@vestelivre.com.br', 'MAMEDE3276')
-
-    # 3. Coletar os arquivos estáticos
-    call_command('collectstatic', interactive=False)
-
-    return HttpResponse("✅ Site configurado com sucesso!")
-
-
-
 
 
 
