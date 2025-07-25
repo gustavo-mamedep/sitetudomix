@@ -14,16 +14,6 @@ from .api_mercadopago import criar_pagamento
 
 
 
-from django.http import HttpResponse
-from django.core.management import call_command
-
-def setup_site(request):
-    if request.GET.get('token') != 'secreto123':
-        return HttpResponse("Acesso negado", status=403)
-
-    call_command('collectstatic', interactive=False)
-
-    return HttpResponse("✅ Arquivos estáticos coletados com sucesso.")
 
 
 # Create your views here.
