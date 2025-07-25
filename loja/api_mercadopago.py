@@ -19,12 +19,12 @@ def criar_pagamento(itens_pedido, link):
 
     preference_data = {
         "items": itens,
-        # "auto_return": "all",
-        # "back_urls":{
-        #     "success": link,
-        #     "pending": link,
-        #     "failure": link,
-        # }
+        "auto_return": "all",
+        "back_urls":{
+            "success": link,
+            "pending": link,
+            "failure": link,
+        }
     }
     resposta = sdk.preference().create(preference_data)
     link_pagamento = resposta["response"]["init_point"]
