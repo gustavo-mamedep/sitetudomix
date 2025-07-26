@@ -252,7 +252,9 @@ def finalizar_pedido(request, id_pedido):
         else:
             pagamento_tipo = dados.get("pagamento")
             # envio de e-mail para PIX ou Entrega/Retirada
-            assunto = "Pedido Tudo Mix Site"
+            assunto1 = "Pedido Tudo Mix Site MELI"
+            assunto2 = "Pedido Tudo Mix Site PIX"
+            assunto3 = "Pedido Tudo Mix Site AGUARDANDO"
             cliente = pedido.cliente
             corpo = (
                 f"🔔 Novo pedido via site\n\n"
@@ -267,14 +269,15 @@ def finalizar_pedido(request, id_pedido):
                 link = request.build_absolute_uri(reverse('finalizar_pagamento'))
                 link_pagamento, id_pagamento = criar_pagamento(itens_pedido, link)
                 Pagamento.objects.create(id_pagamento=id_pagamento, pedido=pedido)
+                send_mail(assunto1, corpo, None, destinatarios, fail_silently=False)
                 return redirect(link_pagamento)
             
             elif pagamento_tipo == "pix":
-                send_mail(assunto, corpo, None, destinatarios, fail_silently=False)
+                send_mail(assunto2, corpo, None, destinatarios, fail_silently=False)
                 return redirect('pagamento_pix', id_pedido)
             
             else:
-                send_mail(assunto, corpo, None, destinatarios, fail_silently=False)
+                send_mail(assunto3, corpo, None, destinatarios, fail_silently=False)
                 return redirect('pagamento_entrega', id_pedido)
     else:    
         return redirect("loja")
