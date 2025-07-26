@@ -2,46 +2,64 @@
 {% load static %}
 
 {% block body %}
-
-
 <main class="principal">
-      <section class="conta">
+  <section class="conta">
 
-        <div class="conta__container">
-          <div class="checkout__titulos">
-            <p class="checkout__titulo">Faça seu Login</p>
-          </div>
+    <div class="conta__container">
+      <div class="checkout__titulos">
+        <p class="checkout__titulo">Faça seu Login</p>
+      </div>
 
-        {% if erro%}
-            <h4>Usuário ou Senha inválidos</h4>
-        {% endif %}
+      {% if erro %}
+        <h4>Usuário ou Senha inválidos</h4>
+      {% endif %}
 
-          <form
-            class="conta__form"
-            action="{% url 'fazer_login'%}"
-            method="post"
-          >
-            {% csrf_token %}
+      <form
+        class="conta__form"
+        action="{% url 'fazer_login' %}{% if next %}?next={{ next }}{% endif %}"
+        method="post"
+      >
+        {% csrf_token %}
 
-            <div class="conta__item">
-              <label for="email">E-mail</label>
-              <input name="email" type="email" placeholder="Digite seu E-mail" />
-            </div>
+        <input type="hidden" name="next" value="{{ next }}">
 
-            <div class="conta__item">
-              <label for="senha">Senha</label>
-              <input name="senha" type="password" placeholder="Digite sua Senha" />
-            </div>
-
-            <button class="subtotal__botao" type="submit">
-              Entrar    
-            </button>
-          </form>
-            <a href="{% url 'criar_conta' %}">Não tem uma conta? Criar Conta</a>
-            <a href="{% url 'password_reset' %}">Esqueci minha senha</a>
+        <div class="conta__item">
+          <label for="email">E-mail</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="Digite seu E-mail"
+            required
+          />
         </div>
 
-      </section>
-</main>
+        <div class="conta__item">
+          <label for="senha">Senha</label>
+          <input
+            id="senha"
+            name="senha"
+            type="password"
+            placeholder="Digite sua Senha"
+            required
+          />
+        </div>
 
+        <button class="subtotal__botao" type="submit">
+          Entrar    
+        </button>
+      </form>
+
+      <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+        <a
+          href="{% url 'criar_conta' %}{% if next %}?next={{ next }}{% endif %}"
+        >
+          Não tem uma conta? Criar Conta
+        </a>
+        <a href="{% url 'password_reset' %}">Esqueci minha senha</a>
+      </div>
+    </div>
+
+  </section>
+</main>
 {% endblock %}

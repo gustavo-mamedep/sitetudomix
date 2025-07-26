@@ -3,62 +3,84 @@
 
 {% block body %}
 
-
 <main class="principal">
-      <section class="conta">
+  <section class="conta">
 
-        <div class="conta__container">
-          <div class="checkout__titulos">
-            <p class="checkout__titulo">Crie sua conta</p>
-          </div>
+    <div class="conta__container">
+      <div class="checkout__titulos">
+        <p class="checkout__titulo">Crie sua conta</p>
+      </div>
 
-        {% if erro == "preenchimento" %}
-            <p>Preencha todas as informações corretamente</p>
-        {% endif %}
+      {% if erro == "preenchimento" %}
+        <p>Preencha todas as informações corretamente</p>
+      {% endif %}
+      {% if erro == "email_invalido" %}
+        <p>Digite um E-mail válido</p>
+      {% endif %}
+      {% if erro == "usuario_existente" %}
+        <p>Já existe uma conta criada para este E-mail</p>
+      {% endif %}
+      {% if erro == "senhas_diferentes" %}
+        <p>As senhas não são as mesmas, tente novamente</p>
+      {% endif %}
 
-        {% if erro == "email_invalido" %}
-            <p>Digite um E-mail válido</p>
-        {% endif %}
+      <form
+        class="conta__form"
+        action="{% url 'criar_conta' %}{% if next %}?next={{ next }}{% endif %}"
+        method="post"
+      >
+        {% csrf_token %}
 
-        {% if erro == "usuario_existente" %}
-            <p>Já existe uma conta criada para este E-mail</p>
-        {% endif %}
+        <input type="hidden" name="next" value="{{ next }}">
 
-        {% if erro == "senhas_diferentes" %}
-            <p>As senhas não são as mesmas, tente novamente</p>
-        {% endif %}
-
-          <form
-            class="conta__form"
-            action="{% url 'criar_conta' %}"
-            method="post"
-          >
-          {% csrf_token %}
-
-            <div class="conta__item conta__item--email">
-              <label for="email">E-mail</label>
-              <input name="email" type="email" placeholder="Digite seu E-mail" />
-            </div>
-
-            <div class="conta__item">
-              <label for="senha">Senha</label>
-              <input name="senha" type="password" placeholder="Digite sua Senha" />
-            </div>
-
-            <div class="conta__item">
-              <label for="confirmacao_senha">Senha</label>
-              <input name="confirmacao_senha" type="password" placeholder="Confirme sua Senha" />
-            </div>
-
-            <button class="subtotal__botao" type="submit">
-              Criar minha conta 
-            </button>
-          </form>
-            <a href="{% url 'fazer_login' %}">Já tem uma conta? Fazer Login</a>
+        <div class="conta__item conta__item--email">
+          <label for="email">E-mail</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="Digite seu E-mail"
+            required
+          />
         </div>
 
-      </section>
-</main>
+        <div class="conta__item">
+          <label for="senha">Senha</label>
+          <input
+            id="senha"
+            name="senha"
+            type="password"
+            placeholder="Digite sua Senha"
+            required
+          />
+        </div>
 
+        <div class="conta__item">
+          <label for="confirmacao_senha">Confirme a Senha</label>
+          <input
+            id="confirmacao_senha"
+            name="confirmacao_senha"
+            type="password"
+            placeholder="Confirme sua Senha"
+            required
+          />
+        </div>
+
+        <button class="subtotal__botao" type="submit">
+          Criar minha conta
+        </button>
+      </form>
+
+      <div style="margin-top: 1rem;">
+        <a
+          href="{% url 'fazer_login' %}{% if next %}?next={{ next }}{% endif %}"
+        >
+          Já tem uma conta? Fazer Login
+        </a>
+      </div>
+    </div>
+
+  </section>
+</main>
 
 {% endblock %}

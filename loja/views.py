@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
+from django.utils.http import url_has_allowed_host_and_scheme
 from .models import *
 import uuid
 from pybrcode.pix import generate_simple_pix
@@ -11,21 +12,6 @@ from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from datetime import datetime
 from .api_mercadopago import criar_pagamento
-
-
-
-from django.contrib.auth import get_user_model
-from django.http import HttpResponse
-
-def criar_superuser_temporario(request):
-    User = get_user_model()
-    if not User.objects.filter(username='admin').exists():
-        User.objects.create_superuser('admin', 'admin@admin.com', 'admin123')
-        return HttpResponse('Superusuário criado com sucesso.')
-    return HttpResponse('Já existe um superusuário.')
-
-
-    
 
 
 # Create your views here.
@@ -223,6 +209,9 @@ def checkout(request):
 
 
 def finalizar_pedido(request, id_pedido):
+    if not request.user.is_authenticated:
+        return redirect('fazer_login')
+    
     if request.method == "POST":
         erro = None
         dados = request.POST.dict()
@@ -405,67 +394,110 @@ def meus_pedidos(request):
 
 def fazer_login(request):
     erro = False
+    # 1. Captura o next da querystring
+    next_url = request.GET.get('next', '')  
+
+    # 2. Se já estiver logado, manda para next ou para loja
     if request.user.is_authenticated:
-        return redirect('loja')
+        return redirect(next_url or 'loja')
+
     if request.method == "POST":
-        dados = request.POST.dict()
-        if "email" in dados and "senha" in dados:
-            email = dados.get("email")
-            senha = dados.get("senha")
+        dados = request.POST
+        # 3. Dá preferência ao hidden field next do POST
+        next_url = dados.get('next', next_url)
+
+        email = dados.get("email", "")
+        senha = dados.get("senha", "")
+        if email and senha:
             usuario = authenticate(request, username=email, password=senha)
             if usuario:
                 login(request, usuario)
+                # 4. Segurança: só redireciona se for uma URL interna
+                if next_url and url_has_allowed_host_and_scheme(
+                        next_url,
+                        allowed_hosts={request.get_host()},
+                        require_https=request.is_secure()):
+                    print("DEBUG next_url (POST):", next_url)
+                    print("DEBUG next_url (POST):", next_url)
+                    return redirect(next_url)
                 return redirect('loja')
             else:
                 erro = True
         else:
             erro = True
 
-    context = {"erro": erro}
-    return render(request, 'usuario/login.html', context)
+    # 5. Passa next ao template para incluir no form
+    return render(request, 'usuario/login.html', {
+        'erro': erro,
+        'next': next_url,
+    })
 
 
 
 def criar_conta(request):
     erro = None
+    next_url = request.GET.get('next', '')
+
     if request.user.is_authenticated:
-        return redirect('loja')
+        return redirect(next_url or 'loja')
+
     if request.method == "POST":
         dados = request.POST.dict()
+        next_url = dados.get('next', next_url)
+
         if "email" in dados and "senha" in dados and "confirmacao_senha" in dados:
             email = dados.get("email")
             senha = dados.get("senha")
             confirmacao_senha = dados.get("confirmacao_senha")
+
             try:
                 validate_email(email)
             except ValidationError:
                 erro = "email_invalido"
-            if senha == confirmacao_senha:
-                usuario, criado = User.objects.get_or_create(username=email, email=email)
+
+            if senha == confirmacao_senha and erro is None:
+                usuario, criado = User.objects.get_or_create(
+                    username=email, defaults={'email': email}
+                )
                 if not criado:
                     erro = "usuario_existente"
                 else:
                     usuario.set_password(senha)
                     usuario.save()
-                    # fazer o login
                     usuario = authenticate(request, username=email, password=senha)
                     login(request, usuario)
-                    # criar cliente
+
                     if request.COOKIES.get("id_sessao"):
-                        id_sessao = request.COOKIES.get("id_sessao")
-                        cliente, criado = Cliente.objects.get_or_create(id_sessao=id_sessao)
+                        cliente, _ = Cliente.objects.get_or_create(
+                            id_sessao=request.COOKIES["id_sessao"]
+                        )
                     else:
-                        cliente, criado = Cliente.objects.get_or_create(email=email)
+                        cliente, _ = Cliente.objects.get_or_create(email=email)
                     cliente.usuario = usuario
                     cliente.email = email
                     cliente.save()
+
+                    if next_url and url_has_allowed_host_and_scheme(
+                        next_url,
+                        allowed_hosts={request.get_host()},
+                        require_https=request.is_secure()
+                    ):
+                        return redirect(next_url)
                     return redirect('loja')
-            else:
+            elif erro is None:
                 erro = "senhas_diferentes"
         else:
             erro = "preenchimento"
-    context = {"erro": erro}
+
+    context = {
+        "erro": erro,
+        "next": next_url,
+    }
     return render(request, 'usuario/criar_conta.html', context)
+
+
+
+
 
 
 @login_required
