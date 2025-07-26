@@ -65,4 +65,129 @@
 
       </section>
 </main>
+{% endblock %}{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+<main class="principal">
+  <section class="conta">
+    <div class="conta__container">
+      <div class="checkout__titulos">
+        <p class="checkout__titulo">Adicione um novo endereço</p>
+      </div>
+
+      <form
+        class="conta__form"
+        action="{% url 'adicionar_endereco' %}"
+        method="post"
+      >
+        {% csrf_token %}
+
+        <div class="conta__item conta__item--email">
+          <label for="cep">CEP</label>
+          <input
+            id="cep"
+            name="cep"
+            type="text"
+            maxlength="9"
+            placeholder="Digite o CEP (somente números)"
+            required
+          />
+        </div>
+
+        <div class="conta__item">
+          <label for="rua">Av./Rua</label>
+          <input
+            id="rua"
+            name="rua"
+            type="text"
+            placeholder="Digite sua Rua"
+            required
+          />
+        </div>
+
+        <div class="conta__item">
+          <label for="numero">Número</label>
+          <input
+            id="numero"
+            name="numero"
+            type="number"
+            placeholder="Digite o número da casa"
+            required
+          />
+        </div>
+
+        <div class="conta__item">
+          <label for="complemento">Complemento</label>
+          <input
+            id="complemento"
+            name="complemento"
+            type="text"
+            placeholder="Complemento"
+          />
+        </div>
+
+        <div class="conta__item">
+          <label for="bairro">Bairro</label>
+          <input
+            id="bairro"
+            name="bairro"
+            type="text"
+            placeholder="Digite o Bairro"
+            required
+          />
+        </div>
+
+        <div class="conta__item">
+          <label for="cidade">Cidade</label>
+          <input
+            id="cidade"
+            name="cidade"
+            type="text"
+            placeholder="Digite a Cidade"
+            required
+          />
+        </div>
+
+        <div class="conta__item">
+          <label for="estado">Estado</label>
+          <input
+            id="estado"
+            name="estado"
+            type="text"
+            placeholder="Digite o Estado"
+            required
+          />
+        </div>
+
+        <button class="subtotal__botao" type="submit">
+          Cadastrar    
+        </button>
+      </form>
+
+      <a href="{% url 'checkout' %}">Retornar para o pagamento</a>
+    </div>
+  </section>
+</main>
+
+<script>
+  document.getElementById('cep').addEventListener('blur', function() {
+    const cep = this.value.replace(/\D/g, '');
+    if (cep.length === 8) {
+      fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        .then(res => res.json())
+        .then(data => {
+          if (!data.erro) {
+            document.getElementById('rua').value = data.logradouro;
+            document.getElementById('bairro').value = data.bairro;
+            document.getElementById('cidade').value = data.localidade;
+            document.getElementById('estado').value = data.uf;
+          } else {
+            alert('CEP não encontrado.');
+          }
+        })
+        .catch(() => alert('Erro ao buscar CEP.'));
+    }
+  });
+</script>
 {% endblock %}
