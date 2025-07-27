@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import *
 
+
 # Register your models here.
 admin.site.register(Cliente)
 admin.site.register(Categoria)
@@ -13,6 +14,7 @@ admin.site.register(Banner)
 admin.site.register(Cor)
 admin.site.register(Pagamento)
 
+
 class ProdutoImagemInline(admin.TabularInline):
     model = ProdutoImagem
     extra = 2
@@ -22,3 +24,9 @@ class ProdutoImagemInline(admin.TabularInline):
 class ProdutoAdmin(admin.ModelAdmin):
     list_display = ('nome','referencia','preco','ativo')
     inlines = [ProdutoImagemInline]
+
+
+class ProdutoAdmin(admin.ModelAdmin):
+    search_fields = ('nome', 'referencia')
+
+admin.site.register(Produto, ProdutoAdmin)

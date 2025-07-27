@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
 
+
 # Create your models here.
 
 class Cliente(models.Model):
@@ -45,6 +46,7 @@ class Produto(models.Model):
     categoria = models.ForeignKey(Categoria, null=True, blank=True, on_delete=models.SET_NULL)
     subcategoria = models.ForeignKey(Subcategoria, null=True, blank=True, on_delete=models.SET_NULL)
     descricao = models.TextField(null=True, blank=True, default="")
+    
 
     def __str__(self):
         return f"Nome: {self.nome} - Ref.: {self.referencia} - Preço: R$ {self.preco} - Catedoria: {self.categoria} - {self.subcategoria}"
