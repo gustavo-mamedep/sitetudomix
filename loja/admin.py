@@ -1,8 +1,6 @@
 from django.contrib import admin
 from .models import *
 
-
-# Register your models here.
 admin.site.register(Cliente)
 admin.site.register(Categoria)
 admin.site.register(Subcategoria)
@@ -14,19 +12,13 @@ admin.site.register(Banner)
 admin.site.register(Cor)
 admin.site.register(Pagamento)
 
-
 class ProdutoImagemInline(admin.TabularInline):
     model = ProdutoImagem
     extra = 1
-    fields = ('ordem','imagem')
+    fields = ('ordem', 'imagem')
 
 @admin.register(Produto)
 class ProdutoAdmin(admin.ModelAdmin):
-    list_display = ('nome','referencia','preco','ativo')
+    list_display = ('nome', 'referencia', 'preco', 'ativo')
+    search_fields = ('nome', 'referencia')  # <-- adiciona o campo de busca
     inlines = [ProdutoImagemInline]
-
-
-class ProdutoAdmin(admin.ModelAdmin):
-    search_fields = ('nome', 'referencia')
-
-admin.site.register(ProdutoAdmin)
