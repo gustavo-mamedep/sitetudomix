@@ -17,7 +17,7 @@ admin.site.register(Pagamento)
 
 class ProdutoImagemInline(admin.TabularInline):
     model = ProdutoImagem
-    extra = 2
+    extra = 1
     fields = ('ordem','imagem')
 
 @admin.register(Produto)
@@ -29,4 +29,4 @@ class ProdutoAdmin(admin.ModelAdmin):
 class ProdutoAdmin(admin.ModelAdmin):
     search_fields = ('nome', 'referencia')
 
-admin.site.register(Produto, ProdutoAdmin)
+admin.site.register(ProdutoAdmin)
