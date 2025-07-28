@@ -265,12 +265,12 @@ def finalizar_pedido(request, id_pedido):
             destinatarios = ["gustavo@vestelivre.com.br"]
 
             if pagamento_tipo == "card":
-                itens_pedido = ItensPedido.objects.filter(pedido=pedido)
-                link = request.build_absolute_uri(reverse('finalizar_pagamento'))
-                link_pagamento, id_pagamento = criar_pagamento(itens_pedido, link)
-                Pagamento.objects.create(id_pagamento=id_pagamento, pedido=pedido)
+                # itens_pedido = ItensPedido.objects.filter(pedido=pedido)
+                # link = request.build_absolute_uri(reverse('finalizar_pagamento'))
+                # link_pagamento, id_pagamento = criar_pagamento(itens_pedido, link)
+                # Pagamento.objects.create(id_pagamento=id_pagamento, pedido=pedido)
                 send_mail(assunto1, corpo, None, destinatarios, fail_silently=False)
-                return redirect(link_pagamento)
+                return redirect('pagamento_cartao', id_pedido)
             
             elif pagamento_tipo == "pix":
                 send_mail(assunto2, corpo, None, destinatarios, fail_silently=False)
@@ -584,6 +584,13 @@ def pagamento_entrega(request, id_pedido):
     pedido = get_object_or_404(Pedido, id=id_pedido)
     context = {"pedido": pedido}
     return render(request, "pagamento_entrega.html", context)
+
+
+
+def pagamento_cartao(request, id_pedido):
+    pedido = get_object_or_404(Pedido, id=id_pedido)
+    context = {"pedido": pedido}
+    return render(request, "pagamento_cartão.html", context)
 
 
 

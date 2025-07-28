@@ -17,6 +17,7 @@ urlpatterns = [
    path('finalizarpagamento/', finalizar_pagamento, name="finalizar_pagamento"),
    path('pagamentopix/<int:id_pedido>/', pagamento_pix, name="pagamento_pix"),
    path('pagamentoentrega/<int:id_pedido>/', pagamento_entrega, name="pagamento_entrega"),
+   path('pagamentocartao/<int:id_pedido>/', pagamento_cartao, name="pagamento_cartao"),
    path('pedidoaprovado/<int:id_pedido>/', pedido_aprovado, name="pedido_arovado"),
    path('loja/<slug:categoria_slug>-<slug:subcategoria_slug>/', loja, name='loja_subcategoria'),
 
