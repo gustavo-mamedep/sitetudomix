@@ -4,13 +4,12 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from .models import *
 import uuid
 from pybrcode.pix import generate_simple_pix
-from .utils import filtrar_produtos, preco_minimo_maximo, ordenar_produtos, enviar_email_compra, exportar_csv, calcular_frete
+from .utils import filtrar_produtos, preco_minimo_maximo, ordenar_produtos, enviar_email_compra, exportar_csv
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
-from django.http import JsonResponse
 from datetime import datetime
 from .api_mercadopago import criar_pagamento
 
@@ -588,11 +587,3 @@ def pagamento_entrega(request, id_pedido):
 
 
 
-
-def calcular_frete_ajax(request):
-    cep = request.GET.get("cep")
-    if not cep:
-        return JsonResponse({"erro": "CEP não informado"}, status=400)
-
-    resultado = calcular_frete(cep)
-    return JsonResponse(resultado)

@@ -3,8 +3,6 @@
 from django.db.models import Max, Min
 from django.core.mail import send_mail
 from django.http import HttpResponse
-from decimal import Decimal
-from zeep import Client
 import csv
 
 
@@ -73,78 +71,3 @@ def exportar_csv(informacoes):
     
     return resposta
 
-
-# WSDL oficial dos Correios
-WSDL_URL = 'https://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?WSDL'
-# Códigos de serviço dos Correios
-SERVICO_PAC = '04510'
-SERVICO_SEDEX = '04014'
-
-def calcular_frete(cep_destino):
-    """
-    Retorna dict com:
-      - pac: Decimal
-      - sedex: Decimal
-      - frete_fixo: Decimal (8.00 p/ CEPs 384xxxx) ou None
-    """
-    cep_origem = "38414348"   # Uberlândia
-    peso = "0.300"            # em kg
-    formato = 1               # 1 = caixa/pacote
-    comprimento = 15
-    altura = 10
-    largura = 15
-    diametro = 0
-
-    try:
-        # instância o client SOAP apenas quando chamar a função
-        client = Client(WSDL_URL)
-
-        # PAC
-        resp_pac = client.service.CalcPrecoPrazo(
-            nCdEmpresa='', sDsSenha='',
-            nCdServico=SERVICO_PAC,
-            sCepOrigem=cep_origem,
-            sCepDestino=cep_destino,
-            nVlPeso=peso,
-            nCdFormato=formato,
-            nVlComprimento=comprimento,
-            nVlAltura=altura,
-            nVlLargura=largura,
-            nVlDiametro=diametro,
-            sCdMaoPropria='N',
-            nVlValorDeclarado='0',
-            sCdAvisoRecebimento='N'
-        )
-        pac_data = resp_pac.Servicos.cServico
-        valor_pac = Decimal(pac_data.Valor.replace(',', '.'))
-
-        # SEDEX
-        resp_sedex = client.service.CalcPrecoPrazo(
-            nCdEmpresa='', sDsSenha='',
-            nCdServico=SERVICO_SEDEX,
-            sCepOrigem=cep_origem,
-            sCepDestino=cep_destino,
-            nVlPeso=peso,
-            nCdFormato=formato,
-            nVlComprimento=comprimento,
-            nVlAltura=altura,
-            nVlLargura=largura,
-            nVlDiametro=diametro,
-            sCdMaoPropria='N',
-            nVlValorDeclarado='0',
-            sCdAvisoRecebimento='N'
-        )
-        sedex_data = resp_sedex.Servicos.cServico
-        valor_sedex = Decimal(sedex_data.Valor.replace(',', '.'))
-
-        # Frete fixo para Uberlândia (CEPs 384xxxx)
-        frete_fixo = Decimal('8.00') if cep_destino.startswith("384") else None
-
-        return {
-            "pac": round(valor_pac, 2),
-            "sedex": round(valor_sedex, 2),
-            "frete_fixo": round(frete_fixo, 2) if frete_fixo is not None else None
-        }
-
-    except Exception as e:
-        return {"erro": f"Não foi possível calcular frete ({e})"}
