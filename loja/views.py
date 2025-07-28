@@ -77,8 +77,11 @@ def loja(request, filtro=None):
     minimo, maximo = preco_minimo_maximo(produtos)
 
     # 5) ordenar e renderizar
-    ordem = request.GET.get("ordem", "menor-preco")
-    produtos = ordenar_produtos(produtos, ordem)
+    ordem = request.GET.get("ordem")
+    if ordem:
+        produtos = ordenar_produtos(produtos, ordem)
+    else:
+        produtos = produtos.order_by("nome")
 
     return render(request, "loja.html", {
         "produtos": produtos,
