@@ -590,7 +590,7 @@ def pagamento_entrega(request, id_pedido):
 def pagamento_cartao(request, id_pedido):
     pedido = get_object_or_404(Pedido, id=id_pedido)
     context = {"pedido": pedido}
-    return render(request, "pagamento_cartão.html", context)
+    return render(request, "pagamento_cartao.html", context)
 
 
 
