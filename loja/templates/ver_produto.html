@@ -81,6 +81,60 @@
               <input type="hidden" name="cor" value="{{ id_cor }}">
               <button type="submit" class="s-produto__adicicionar">Adicionar ao carrinho</button>
             </form>
+
+            <!-- Campo de cálculo de frete -->
+            <div id="frete-box" style="margin-top: 2rem;">
+              <label for="cep">Calcular frete:</label>
+              <input
+                type="text"
+                id="cep"
+                name="cep"
+                placeholder="Digite o CEP"
+                maxlength="9"
+                style="padding: 0.5rem; width: 150px; margin-right: 1rem;"
+              />
+              <button
+                type="button"
+                onclick="calcularFrete()"
+                style="padding: 0.5rem 1rem; cursor: pointer;"
+              >
+                Calcular
+              </button>
+              <div id="resultado-frete" style="margin-top: 1rem;"></div>
+            </div>
+
+            <script>
+              function calcularFrete() {
+                const cep = document.getElementById("cep").value;
+                const resultado = document.getElementById("resultado-frete");
+                if (!cep) {
+                  resultado.innerHTML = "<p>Digite um CEP válido.</p>";
+                  return;
+                }
+
+                resultado.innerHTML = "<p>Calculando frete...</p>";
+
+                fetch("{% url 'calcular_frete' %}?cep=" + cep)
+                  .then(response => response.json())
+                  .then(data => {
+                    if (data.erro) {
+                      resultado.innerHTML = `<p style="color: red;">${data.erro}</p>`;
+                    } else {
+                      let texto = "";
+                      if (data.frete_fixo) {
+                        texto += `<p><strong>Frete Fixo (Uberlândia):</strong> R$ ${data.frete_fixo}</p>`;
+                      }
+                      texto += `<p><strong>PAC:</strong> R$ ${data.pac}</p>`;
+                      texto += `<p><strong>SEDEX:</strong> R$ ${data.sedex}</p>`;
+                      resultado.innerHTML = texto;
+                    }
+                  })
+                  .catch(() => {
+                    resultado.innerHTML = "<p style='color: red;'>Erro ao calcular frete.</p>";
+                  });
+              }
+            </script>
+
           {% else %}
             <div class="s-produto__cores">
               {% for cor in cores %}

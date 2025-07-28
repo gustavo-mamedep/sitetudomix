@@ -19,6 +19,7 @@ urlpatterns = [
    path('pagamentoentrega/<int:id_pedido>/', pagamento_entrega, name="pagamento_entrega"),
    path('pedidoaprovado/<int:id_pedido>/', pedido_aprovado, name="pedido_arovado"),
    path('loja/<slug:categoria_slug>-<slug:subcategoria_slug>/', loja, name='loja_subcategoria'),
+   path('calcularfrete/', calcular_frete_ajax, name='calcular_frete'),
 
    path("empresa/", info_empresa, name="empresa"),
    path("seguranca/", info_seguranca, name="seguranca"),
