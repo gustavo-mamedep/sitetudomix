@@ -99,7 +99,7 @@
         <div class="s-produto__descricao">
           <p class="s-produto__descricao-titulo">Descrição do produto</p>
           <div class="s-produto__descricao-textos">
-            <p>{{ produto.descricao }}</p>
+            <p>{{ produto.descricao|safe }}</p>
             <p>
               CÓDIGO DO PRODUTO<br/>
               Ref: <span>{{ produto.referencia }}</span>
