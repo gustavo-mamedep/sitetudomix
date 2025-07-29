@@ -146,4 +146,33 @@
   {% endif %}
 </main>
 
+<!-- Script para sincronizar botões do carrossel no mobile -->
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  const carousel = document.querySelector('.s-produto__carrossel-itens');
+  const items    = Array.from(document.querySelectorAll('.s-produto__carrossel-img'));
+  const buttons  = Array.from(document.querySelectorAll('.s-produto__carrossel-botao'));
+
+  // Clicar na bolinha scrolla para o slide correspondente
+  buttons.forEach((btn, i) => {
+    btn.addEventListener('click', () => {
+      carousel.scrollTo({ left: items[i].offsetLeft, behavior: 'smooth' });
+      setActive(i);
+    });
+  });
+
+  // Ao scrollar/carrosselar, atualiza a bolinha ativa
+  carousel.addEventListener('scroll', () => {
+    const idx = Math.round(carousel.scrollLeft / carousel.clientWidth);
+    setActive(idx);
+  });
+
+  function setActive(activeIdx) {
+    buttons.forEach((b, i) => {
+      b.classList.toggle('s-produto__carrossel-botao--selecionado', i === activeIdx);
+    });
+  }
+});
+</script>
+
 {% endblock %}
