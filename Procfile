@@ -1,1 +1,1 @@
-web: gunicorn tudomixsite.wsgi --log-file -
+web: gunicorn tudomixsite.wsgi --bind 0.0.0.0:$PORT --workers $WEB_CONCURRENCY --timeout $WEB_TIMEOUT --log-file -
