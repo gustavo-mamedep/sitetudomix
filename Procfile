@@ -1,1 +1,1 @@
-web: gunicorn tudomixsite.wsgi:application
+web: gunicorn tudomixsite.wsgi --log-file -

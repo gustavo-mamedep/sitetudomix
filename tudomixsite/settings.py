@@ -34,11 +34,21 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['.onrender.com',
-                 'www.tudomixudi.com.br',
-                 'tudomixudi.com.br',
-                 ]
+ALLOWED_HOSTS = [
+    'sitetudomix-e985a14f3328.herokuapp.com',
+    'sitetudomix.herokuapp.com',
+    'www.tudomixudi.com.br',
+    'tudomixudi.com.br',
+    'localhost',
+    '127.0.0.1',
+]
 
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://sitetudomix.herokuapp.com',
+    'https://www.tudomixudi.com.br',
+    'https://tudomixudi.com.br',
+]
 
 # Application definition
 
@@ -94,7 +104,11 @@ WSGI_APPLICATION = 'tudomixsite.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(default=config('DATABASE_URL'))
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL', default=''),
+        conn_max_age=600,
+        ssl_require=True
+    )
 }
 
 
