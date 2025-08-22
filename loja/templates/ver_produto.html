@@ -78,13 +78,7 @@ window.addEventListener('DOMContentLoaded', function () {
           <strong>Selecione a cor:</strong>
 
           {% if cor_selecionada %}
-            <form method="POST"
-                  action="{% url 'adicionar_carrinho' produto.id %}"
-                  onsubmit="
-                    fbq('track', 'AddToCart', {
-                      content_ids: ['{{ produto.id }}'],
-                      content_type: 'product',
-                      content_name: '{{ produto.nome|escapejs }}'">
+            <form id="form-add-to-cart" method="POST" action="{% url 'adicionar_carrinho' produto.id %}">
               {% csrf_token %}
               <div class="s-produto__cor">
                 <p class="s-produto__cor-nome">Cor: <span>{{ cor_selecionada }}</span></p>
@@ -157,6 +151,31 @@ window.addEventListener('DOMContentLoaded', function () {
     </section>
   {% endif %}
 </main>
+
+
+{% load l10n %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var form = document.getElementById('form-add-to-cart');
+  if (!form) return;
+
+  form.addEventListener('submit', function () {
+    try {
+      fbq('track', 'AddToCart', {
+        content_ids: ['{{ produto.id }}'],
+        content_type: 'product',
+        content_name: '{{ produto.nome|escapejs }}'
+        // se quiser depois: currency: 'BRL', value: Number("{% localize off %}{{ produto.preco|default_if_none:0|floatformat:2 }}{% endlocalize %}")
+      });
+    } catch (e) {
+      console.warn('FBQ AddToCart error:', e);
+    }
+  });
+});
+</script>
+
+
 
 <!-- Script para sincronizar botões do carrossel no mobile -->
 <script>
