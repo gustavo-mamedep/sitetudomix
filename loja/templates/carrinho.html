@@ -3,7 +3,27 @@
 
 {% block body %}
 
+{% load l10n %}
 
+{% localize off %}
+<script>
+  // Dispara quando a página do carrinho abre
+  fbq('trackCustom', 'ViewCart', {
+    currency: 'BRL',
+    value: {{ pedido.preco_total|default_if_none:0|floatformat:2 }},
+    contents: [
+      {% for item in itens_pedido %}
+      {
+        "id": "{{ item.item_estoque.produto.id }}",
+        "quantity": {{ item.quantidade|default_if_none:0 }},
+        "item_price": {{ item.item_estoque.produto.preco|default_if_none:0|floatformat:2 }}
+      }{% if not forloop.last %},{% endif %}
+      {% endfor %}
+    ],
+    content_type: 'product'
+  });
+</script>
+{% endlocalize %}
 
 
 
