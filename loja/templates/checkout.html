@@ -4,27 +4,48 @@
 {% block body %}
 
 
-{% localize off %}
-<script>
-  // Dispara ao abrir o checkout
-  fbq('track', 'InitiateCheckout', {
-    currency: 'BRL',
-    value: {{ pedido.preco_total|default_if_none:0|floatformat:2 }},
-    num_items: {{ pedido.quantidade_total|default_if_none:0 }},
-    contents: [
-      {% for item in pedido.itens %}
-      {
-        "id": "{{ item.item_estoque.produto.id }}",
-        "quantity": {{ item.quantidade|default_if_none:0 }},
-        "item_price": {{ item.item_estoque.produto.preco|default_if_none:0|floatformat:2 }}
-      }{% if not forloop.last %},{% endif %}
-      {% endfor %}
-    ],
-    content_type: 'product'
-  });
-</script>
-{% endlocalize %}
+{% load l10n %}
 
+<div id="fb-checkout-data"
+     data-total="{% localize off %}{{ pedido.preco_total|default_if_none:0|floatformat:2 }}{% endlocalize %}"
+     data-num-items="{{ pedido.quantidade_total|default_if_none:0 }}">
+  {% for item in pedido.itens %}
+    <div class="fb-item"
+         data-id="{{ item.item_estoque.produto.id }}"
+         data-qty="{{ item.quantidade|default_if_none:0 }}"
+         data-price="{% localize off %}{{ item.item_estoque.produto.preco|default_if_none:0|floatformat:2 }}{% endlocalize %}">
+    </div>
+  {% endfor %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  try {
+    var root = document.getElementById('fb-checkout-data');
+    if (!root) return;
+
+    var value = Number(root.dataset.total || 0);
+    var num   = Number(root.dataset.numItems || 0);
+    var contents = Array.from(root.querySelectorAll('.fb-item')).map(function (el) {
+      return {
+        id: el.dataset.id,
+        quantity: Number(el.dataset.qty || 0),
+        item_price: Number(el.dataset.price || 0)
+      };
+    });
+
+    fbq('track', 'InitiateCheckout', {
+      currency: 'BRL',
+      value: value,
+      num_items: num,
+      contents: contents,
+      content_type: 'product'
+    });
+  } catch (e) {
+    console.error('FBQ InitiateCheckout error:', e);
+  }
+});
+</script>
 
 <main class="principal">
   <section class="secao-checkout">
