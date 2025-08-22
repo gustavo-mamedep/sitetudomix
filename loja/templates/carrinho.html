@@ -3,49 +3,48 @@
 
 {% block body %}
 
-{% if cliente_existente and itens_pedido %}
+
+{% if itens_pedido %}
 {% load l10n %}
 
-{# >>> DESATIVA localização para garantir ponto decimal nos JSONs <<< #}
-{% localize off %}
-<script type="application/json" id="fb-cart-contents">
-[
+{# --- Dados do carrinho em data-attributes (não dá conflito com PyCharm/JS) --- #}
+<div id="fb-cart-data"
+     data-total="{% localize off %}{{ pedido.preco_total|default_if_none:0|floatformat:2 }}{% endlocalize %}">
   {% for item in itens_pedido %}
-  {
-    "id": "{{ item.item_estoque.produto.id }}",
-    "quantity": {{ item.quantidade|default_if_none:0 }},
-    "item_price": {{ item.item_estoque.produto.preco|default_if_none:0|floatformat:2 }}
-  }{% if not forloop.last %},{% endif %}
+    <div class="fb-item"
+         data-id="{{ item.item_estoque.produto.id }}"
+         data-qty="{{ item.quantidade|default_if_none:0 }}"
+         data-price="{% localize off %}{{ item.item_estoque.produto.preco|default_if_none:0|floatformat:2 }}{% endlocalize %}">
+    </div>
   {% endfor %}
-]
-</script>
-
-<script type="application/json" id="fb-cart-total">
-{"value": {{ pedido.preco_total|default_if_none:0|floatformat:2 }}}
-</script>
-{% endlocalize %}
+</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   try {
-    var contentsEl = document.getElementById('fb-cart-contents');
-    var totalEl    = document.getElementById('fb-cart-total');
-    if (!contentsEl || !totalEl) { console.warn('ViewCart: JSON não encontrado'); return; }
+    var root = document.getElementById('fb-cart-data');
+    if (!root) { console.warn('ViewCart: #fb-cart-data não encontrado'); return; }
 
-    var contents = JSON.parse(contentsEl.textContent);
-    var totalObj = JSON.parse(totalEl.textContent);
+    var value = Number(root.dataset.total || 0);
+    var contents = Array.from(root.querySelectorAll('.fb-item')).map(function (el) {
+      return {
+        id: el.dataset.id,
+        quantity: Number(el.dataset.qty || 0),
+        item_price: Number(el.dataset.price || 0)
+      };
+    });
 
-    var cartValue = Number(totalObj.value || 0);
-    if (!Array.isArray(contents)) { console.warn('ViewCart: contents inválido'); return; }
+    // Se estiver vazio por algum motivo, evita enviar lixo
+    if (!contents.length) { console.warn('ViewCart: carrinho vazio'); return; }
 
     fbq('trackCustom', 'ViewCart', {
       currency: 'BRL',
-      value: cartValue,
+      value: value,
       contents: contents,
       content_type: 'product'
     });
 
-    console.log('ViewCart enviado:', { value: cartValue, contents });
+    console.log('ViewCart enviado:', { value, contents });
   } catch (e) {
     console.error('FBQ ViewCart error:', e);
   }
