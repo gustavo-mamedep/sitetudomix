@@ -6,7 +6,8 @@
 {% if cliente_existente and itens_pedido %}
 {% load l10n %}
 
-{# 1) Embute os dados do carrinho em JSON puro, que o PyCharm não valida como JS #}
+{# >>> DESATIVA localização para garantir ponto decimal nos JSONs <<< #}
+{% localize off %}
 <script type="application/json" id="fb-cart-contents">
 [
   {% for item in itens_pedido %}
@@ -22,26 +23,36 @@
 <script type="application/json" id="fb-cart-total">
 {"value": {{ pedido.preco_total|default_if_none:0|floatformat:2 }}}
 </script>
+{% endlocalize %}
 
-{# 2) Lê o JSON e envia ao Pixel #}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   try {
-    var contents = JSON.parse(document.getElementById('fb-cart-contents').textContent);
-    var totalObj = JSON.parse(document.getElementById('fb-cart-total').textContent);
+    var contentsEl = document.getElementById('fb-cart-contents');
+    var totalEl    = document.getElementById('fb-cart-total');
+    if (!contentsEl || !totalEl) { console.warn('ViewCart: JSON não encontrado'); return; }
+
+    var contents = JSON.parse(contentsEl.textContent);
+    var totalObj = JSON.parse(totalEl.textContent);
+
+    var cartValue = Number(totalObj.value || 0);
+    if (!Array.isArray(contents)) { console.warn('ViewCart: contents inválido'); return; }
 
     fbq('trackCustom', 'ViewCart', {
       currency: 'BRL',
-      value: Number(totalObj.value || 0),
+      value: cartValue,
       contents: contents,
       content_type: 'product'
     });
+
+    console.log('ViewCart enviado:', { value: cartValue, contents });
   } catch (e) {
-    console.warn('FBQ ViewCart error:', e);
+    console.error('FBQ ViewCart error:', e);
   }
 });
 </script>
 {% endif %}
+
 
 
 
