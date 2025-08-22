@@ -10,7 +10,6 @@ window.addEventListener('DOMContentLoaded', function () {
     content_ids: ['{{ produto.id }}'],
     content_type: 'product',
     content_name: '{{ produto.nome|escapejs }}',
-    currency: 'BRL'
   });
 });
 </script>
@@ -79,18 +78,13 @@ window.addEventListener('DOMContentLoaded', function () {
           <strong>Selecione a cor:</strong>
 
           {% if cor_selecionada %}
-            <!-- ADD TO CART: dispara no submit antes de enviar ao backend -->
             <form method="POST"
                   action="{% url 'adicionar_carrinho' produto.id %}"
                   onsubmit="
                     fbq('track', 'AddToCart', {
                       content_ids: ['{{ produto.id }}'],
                       content_type: 'product',
-                      content_name: '{{ produto.nome|escapejs }}',
-                      currency: 'BRL',
-                      value: {% localize off %}{{ produto.preco|floatformat:2 }}{% endlocalize %}
-                    });
-                  ">
+                      content_name: '{{ produto.nome|escapejs }}'">
               {% csrf_token %}
               <div class="s-produto__cor">
                 <p class="s-produto__cor-nome">Cor: <span>{{ cor_selecionada }}</span></p>
