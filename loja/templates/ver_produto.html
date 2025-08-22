@@ -6,13 +6,8 @@
 
 <!-- ViewContent ao abrir a página do produto -->
 <script>
-  fbq('track', 'ViewContent', {
-    content_ids: ['{{ produto.id }}'],
-    content_type: 'product',
-    content_name: '{{ produto.nome|escapejs }}',
-    currency: 'BRL',
-    value: {% localize off %}{{ produto.preco|floatformat:2 }}{% endlocalize %}
-  });
+  // Teste mínimo: sem parâmetros
+  fbq('track', 'ViewContent');
 </script>
 
 <main class="principal principal--padding-b principal--gap">
