@@ -3,27 +3,40 @@
 
 {% block body %}
 
+{% if cliente_existente and itens_pedido %}
 {% load l10n %}
 
 {% localize off %}
 <script>
-  // Dispara quando a página do carrinho abre
-  fbq('trackCustom', 'ViewCart', {
-    currency: 'BRL',
-    value: {{ pedido.preco_total|default_if_none:0|floatformat:2 }},
-    contents: [
-      {% for item in itens_pedido %}
-      {
-        "id": "{{ item.item_estoque.produto.id }}",
-        "quantity": {{ item.quantidade|default_if_none:0 }},
-        "item_price": {{ item.item_estoque.produto.preco|default_if_none:0|floatformat:2 }}
-      }{% if not forloop.last %},{% endif %}
-      {% endfor %}
-    ],
-    content_type: 'product'
-  });
+document.addEventListener('DOMContentLoaded', function () {
+  try {
+    // total do pedido como string e depois para número
+    var cartValue = parseFloat("{{ pedido.preco_total|default_if_none:0|floatformat:2 }}");
+
+    // monta o array contents sem vírgulas problemáticas
+    var contents = [];
+    {% for item in itens_pedido %}
+    contents.push({
+      id: "{{ item.item_estoque.produto.id }}",
+      quantity: {{ item.quantidade|default_if_none:0 }},
+      item_price: parseFloat("{{ item.item_estoque.produto.preco|default_if_none:0|floatformat:2 }}")
+    });
+    {% endfor %}
+
+    fbq('trackCustom', 'ViewCart', {
+      currency: 'BRL',
+      value: cartValue,
+      contents: contents,
+      content_type: 'product'
+    });
+  } catch (e) {
+    console.warn('FBQ ViewCart error:', e);
+  }
+});
 </script>
 {% endlocalize %}
+{% endif %}
+
 
 
 
