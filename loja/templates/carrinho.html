@@ -6,26 +6,33 @@
 {% if cliente_existente and itens_pedido %}
 {% load l10n %}
 
-{% localize off %}
+{# 1) Embute os dados do carrinho em JSON puro, que o PyCharm não valida como JS #}
+<script type="application/json" id="fb-cart-contents">
+[
+  {% for item in itens_pedido %}
+  {
+    "id": "{{ item.item_estoque.produto.id }}",
+    "quantity": {{ item.quantidade|default_if_none:0 }},
+    "item_price": {{ item.item_estoque.produto.preco|default_if_none:0|floatformat:2 }}
+  }{% if not forloop.last %},{% endif %}
+  {% endfor %}
+]
+</script>
+
+<script type="application/json" id="fb-cart-total">
+{"value": {{ pedido.preco_total|default_if_none:0|floatformat:2 }}}
+</script>
+
+{# 2) Lê o JSON e envia ao Pixel #}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   try {
-    // total do pedido como string e depois para número
-    var cartValue = parseFloat("{{ pedido.preco_total|default_if_none:0|floatformat:2 }}");
-
-    // monta o array contents sem vírgulas problemáticas
-    var contents = [];
-    {% for item in itens_pedido %}
-    contents.push({
-      id: "{{ item.item_estoque.produto.id }}",
-      quantity: {{ item.quantidade|default_if_none:0 }},
-      item_price: parseFloat("{{ item.item_estoque.produto.preco|default_if_none:0|floatformat:2 }}")
-    });
-    {% endfor %}
+    var contents = JSON.parse(document.getElementById('fb-cart-contents').textContent);
+    var totalObj = JSON.parse(document.getElementById('fb-cart-total').textContent);
 
     fbq('trackCustom', 'ViewCart', {
       currency: 'BRL',
-      value: cartValue,
+      value: Number(totalObj.value || 0),
       contents: contents,
       content_type: 'product'
     });
@@ -34,8 +41,8 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 });
 </script>
-{% endlocalize %}
 {% endif %}
+
 
 
 
