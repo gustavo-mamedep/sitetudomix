@@ -9,7 +9,8 @@ window.addEventListener('DOMContentLoaded', function () {
   fbq('track', 'ViewContent', {
     content_ids: ['{{ produto.id }}'],
     content_type: 'product',
-    content_name: '{{ produto.nome|escapejs }}'
+    content_name: '{{ produto.nome|escapejs }}',
+    currency: 'BRL'
   });
 });
 </script>
