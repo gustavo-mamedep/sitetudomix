@@ -4,10 +4,23 @@
 
 {% block body %}
 
-<!-- ViewContent ao abrir a página do produto -->
+{% load l10n %}
+
+<!-- ViewContent ao abrir a página do produto (robusto) -->
 <script>
-  // Teste mínimo: sem parâmetros
-  fbq('track', 'ViewContent');
+window.addEventListener('DOMContentLoaded', function () {
+  try {
+    fbq('track', 'ViewContent', {
+      content_ids: ['{{ produto.id }}'],
+      content_type: 'product',
+      content_name: '{{ produto.nome|escapejs }}',
+      currency: 'BRL',
+      value: {% localize off %}{{ produto.preco|default_if_none:0|floatformat:2 }}{% endlocalize %}
+    });
+  } catch (e) {
+    console.warn('FBQ ViewContent error:', e);
+  }
+});
 </script>
 
 <main class="principal principal--padding-b principal--gap">
