@@ -1,7 +1,19 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load l10n %}
 
 {% block body %}
+
+<!-- ViewContent ao abrir a página do produto -->
+<script>
+  fbq('track', 'ViewContent', {
+    content_ids: ['{{ produto.id }}'],
+    content_type: 'product',
+    content_name: '{{ produto.nome|escapejs }}',
+    currency: 'BRL',
+    value: {% localize off %}{{ produto.preco|floatformat:2 }}{% endlocalize %}
+  });
+</script>
 
 <main class="principal principal--padding-b principal--gap">
   <section class="s-produto">
@@ -61,10 +73,23 @@
       <div class="s-produto__infos">
         <h1 class="s-produto__titulo">{{ produto.nome }}</h1>
         <p class="s-produto__preco">R$ {{ produto.preco }}</p>
+
         {% if tem_estoque %}
           <strong>Selecione a cor:</strong>
+
           {% if cor_selecionada %}
-            <form method="POST" action="{% url 'adicionar_carrinho' produto.id %}">
+            <!-- ADD TO CART: dispara no submit antes de enviar ao backend -->
+            <form method="POST"
+                  action="{% url 'adicionar_carrinho' produto.id %}"
+                  onsubmit="
+                    fbq('track', 'AddToCart', {
+                      content_ids: ['{{ produto.id }}'],
+                      content_type: 'product',
+                      content_name: '{{ produto.nome|escapejs }}',
+                      currency: 'BRL',
+                      value: {% localize off %}{{ produto.preco|floatformat:2 }}{% endlocalize %}
+                    });
+                  ">
               {% csrf_token %}
               <div class="s-produto__cor">
                 <p class="s-produto__cor-nome">Cor: <span>{{ cor_selecionada }}</span></p>
@@ -112,24 +137,16 @@
 
   {% if similares %}
     <section class="similares">
-      <h2 class="similares__titulo">
-        Gostou desse produto? Veja itens similares
-      </h2>
+      <h2 class="similares__titulo">Gostou desse produto? Veja itens similares</h2>
       <div class="similares__container">
         {% for similar in similares %}
           <a href="{% url 'ver_produto' similar.id %}" class="produto">
             <div class="produto__imagem">
               {% with similar.imagens.all.0 as foto_principal %}
                 {% if foto_principal %}
-                  <img
-                    src="{{ foto_principal.imagem.url }}"
-                    alt="{{ similar.nome }}"
-                  />
+                  <img src="{{ foto_principal.imagem.url }}" alt="{{ similar.nome }}" />
                 {% else %}
-                  <img
-                    src="{{ similar.imagem.url }}"
-                    alt="{{ similar.nome }}"
-                  />
+                  <img src="{{ similar.imagem.url }}" alt="{{ similar.nome }}" />
                 {% endif %}
               {% endwith %}
             </div>
@@ -153,7 +170,6 @@ document.addEventListener('DOMContentLoaded', function(){
   const items    = Array.from(document.querySelectorAll('.s-produto__carrossel-img'));
   const buttons  = Array.from(document.querySelectorAll('.s-produto__carrossel-botao'));
 
-  // Clicar na bolinha scrolla para o slide correspondente
   buttons.forEach((btn, i) => {
     btn.addEventListener('click', () => {
       carousel.scrollTo({ left: items[i].offsetLeft, behavior: 'smooth' });
@@ -161,7 +177,6 @@ document.addEventListener('DOMContentLoaded', function(){
     });
   });
 
-  // Ao scrollar/carrosselar, atualiza a bolinha ativa
   carousel.addEventListener('scroll', () => {
     const idx = Math.round(carousel.scrollLeft / carousel.clientWidth);
     setActive(idx);

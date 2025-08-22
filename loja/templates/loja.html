@@ -4,6 +4,14 @@
 
 {% block body %}
 
+<script>
+  // Evento custom para identificar a categoria/navegação
+  fbq('trackCustom', 'ViewCategory', {
+    category_slug: '{{ categoria_selecionada|default:"todas" }}'
+  });
+</script>
+
+
 <main class="principal principal--padding-b">
   <section class="loja">
     <form method="POST" action="{% url 'loja' %}" class="menu">
